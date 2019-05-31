@@ -1,0 +1,5 @@
+{
+  "presets": ["@babel/preset-react", "@babel/preset-typescript", "minify"],
+  "plugins": ["minify-simplify"],
+  "comments": false
+}

@@ -1,0 +1,23 @@
+language: node_js
+
+node_js:
+  - node
+
+install:
+  - npm install
+
+script:
+  - npm run test
+  - npx codecov
+
+jobs:
+  include:
+    - stage: release
+      if: branch == master && !fork
+      node_js: lts/*
+      script: skip
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script:
+          - npx semantic-release

@@ -1,0 +1,63 @@
+{
+  "name": "react-lit-store",
+  "version": "0.0.0-development",
+  "description": "A lightweight state management tool for React.js",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "npm run build-commonjs & npm run build-es",
+    "build-commonjs": "babel src --out-dir lib --extensions '.tsx' --presets=@babel/preset-env",
+    "build-es": "babel src/index.tsx -o lib/index.es.js --extensions '.tsx'",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "semantic-release": "semantic-release",
+    "commit": "git-cz"
+  },
+  "author": "Qingqi Shi <qingqishi@live.com> (https://qingqi.dev)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/QingqiShi/react-lit-store.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "reactjs",
+    "redux",
+    "context",
+    "store"
+  ],
+  "peerDependencies": {
+    "react": "^16.8.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/react": "^16.8.19",
+    "@typescript-eslint/eslint-plugin": "^1.9.0",
+    "@typescript-eslint/parser": "^1.9.0",
+    "babel-preset-minify": "^0.5.0",
+    "codecov": "^3.5.0",
+    "commitizen": "^3.1.1",
+    "cz-conventional-changelog": "^2.1.0",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-plugin-react": "^7.13.0",
+    "husky": "^2.3.0",
+    "prettier": "^1.17.1",
+    "pretty-quick": "^1.11.0",
+    "react": "^16.8.6",
+    "semantic-release": "^15.13.12",
+    "typescript": "^3.5.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
