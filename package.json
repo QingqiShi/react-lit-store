@@ -1,10 +1,11 @@
 {
   "name": "react-lit-store",
-  "version": "0.0.0-development",
+  "version": "0.0.1-development",
   "description": "A lightweight state management tool for React.js",
   "main": "lib/index.js",
+  "module": "lib/index.es.js",
   "scripts": {
-    "build": "npm run build-commonjs & npm run build-es",
+    "build": "npm run build-commonjs && npm run build-es",
     "build-commonjs": "babel src --out-dir lib --extensions '.tsx' --presets=@babel/preset-env",
     "build-es": "babel src/index.tsx -o lib/index.es.js --extensions '.tsx'",
     "test": "echo \"Error: no test specified\"",
