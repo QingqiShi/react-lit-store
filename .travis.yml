@@ -7,15 +7,16 @@ install:
   - npm install
 
 script:
-  - npm run test
-  - npx codecov
+  # - npm run test
+  # - npx codecov
   - npm run build
-# jobs:
-#   include:
-#     - stage: release
-#       if: branch == master && !fork
-#       deploy:
-#         provider: script
-#         skip_cleanup: true
-#         script:
-#           - npx semantic-release
+
+jobs:
+  include:
+    - stage: release
+      if: branch == master && !fork
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script:
+          - npx semantic-release
