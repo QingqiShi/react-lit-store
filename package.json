@@ -9,7 +9,6 @@
     "build-commonjs": "babel src --out-dir lib --extensions '.tsx' --presets=@babel/preset-env",
     "build-es": "babel src/index.tsx -o lib/index.es.js --extensions '.tsx'",
     "test": "echo \"Error: no test specified\"",
-    "semantic-release": "semantic-release",
     "commit": "git-cz"
   },
   "author": "Qingqi Shi <qingqishi@live.com> (https://qingqi.dev)",
@@ -48,7 +47,6 @@
     "prettier": "^1.17.1",
     "pretty-quick": "^1.11.0",
     "react": "^16.8.6",
-    "semantic-release": "^15.13.12",
     "typescript": "^3.5.1"
   },
   "husky": {
