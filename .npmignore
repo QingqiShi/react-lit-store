@@ -1,6 +1,8 @@
 node_modules
+coverage
+lib/index.spec.d.ts
+.eslintrc
+.travis.yml
 babel.config.js
 jest.config.js
-.travis.yml
 tsconfig.json
-lib/index.spec.d.ts
