@@ -10,7 +10,8 @@
     "build-commonjs": "babel src/index.tsx -o lib/index.js --extensions '.tsx' --presets=@babel/preset-env",
     "build-es": "babel src/index.tsx -o lib/index.es.js --extensions '.tsx'",
     "test": "jest",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "version": "standard-version"
   },
   "author": "Qingqi Shi <qingqishi@live.com> (https://qingqi.dev)",
   "repository": {
@@ -52,6 +53,7 @@
     "pretty-quick": "^1.11.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "standard-version": "^6.0.1",
     "typescript": "^3.5.1"
   },
   "husky": {
