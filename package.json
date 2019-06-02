@@ -6,7 +6,7 @@
   "types": "lib/index.d.ts",
   "module": "lib/index.es.js",
   "scripts": {
-    "build": "npm run build-commonjs && npm run build-es && tsc --declaration",
+    "build": "mkdir lib && npm run build-commonjs && npm run build-es && tsc --declaration",
     "build-commonjs": "babel src/index.tsx -o lib/index.js --extensions '.tsx' --presets=@babel/preset-env",
     "build-es": "babel src/index.tsx -o lib/index.es.js --extensions '.tsx'",
     "test": "jest",
