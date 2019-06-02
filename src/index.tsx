@@ -18,7 +18,7 @@ type Connect<S, T = any[]> = (
 
 export interface Action {
   type: string;
-  payload: any;
+  payload?: any;
 }
 
 export interface Store<S> {
@@ -71,7 +71,7 @@ export function createStore<S>(
  * component with the providers of each store.
  */
 export function withStores(
-  Component: React.JSXElementConstructor<{}>,
+  Component: (props: any) => React.ReactElement,
   ...stores: Store<any>[]
 ) {
   return (props: any) => {

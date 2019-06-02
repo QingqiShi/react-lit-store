@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`react-lit-store Provider renders children 1`] = `
+<DocumentFragment>
+  <div>
+    test
+  </div>
+</DocumentFragment>
+`;
+
+exports[`react-lit-store connect can select a subset of the state 1`] = `
+<DocumentFragment>
+  <div>
+    Hi
+  </div>
+</DocumentFragment>
+`;
+
+exports[`react-lit-store connect connect without Provider 1`] = `
+<DocumentFragment>
+  <div>
+    {"count":0,"message":"Hi"}
+  </div>
+</DocumentFragment>
+`;
+
+exports[`react-lit-store connect dispatch actions to update the state 1`] = `
+<DocumentFragment>
+  <button
+    data-testid="button"
+  >
+    1
+  </button>
+</DocumentFragment>
+`;
+
+exports[`react-lit-store connect makes the state available 1`] = `
+<DocumentFragment>
+  <div>
+    {"count":0,"message":"Hi"}
+  </div>
+</DocumentFragment>
+`;
+
+exports[`react-lit-store withStore provides multiple stores 1`] = `
+<DocumentFragment>
+  <div>
+    test
+    <div>
+      0
+    </div>
+    <div>
+      hello
+    </div>
+  </div>
+</DocumentFragment>
+`;
