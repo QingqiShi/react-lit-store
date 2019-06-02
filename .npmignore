@@ -1,1 +1,6 @@
 node_modules
+babel.config.js
+jest.config.js
+.travis.yml
+tsconfig.json
+lib/index.spec.d.ts
