@@ -2,13 +2,14 @@
 
 ⚡️ A lightweight state management tool for React.js
 
-<hr>
-
+![npm](https://img.shields.io/npm/v/react-lit-store.svg)
 ![npm bundle
 size](https://img.shields.io/bundlephobia/minzip/react-lit-store.svg)
 [![Build
 Status](https://travis-ci.org/QingqiShi/react-lit-store.svg?branch=master)](https://travis-ci.org/QingqiShi/react-lit-store)
 [![codecov](https://codecov.io/gh/QingqiShi/react-lit-store/branch/master/graph/badge.svg)](https://codecov.io/gh/QingqiShi/react-lit-store)
+
+<hr>
 
 ## Motivation
 
@@ -149,12 +150,15 @@ available, useful when you want to modularise your store.
 
 ### `Store.connect(EnhancedComponent, getState)`
 
+Returns a connected component.
+
 `EnhancedComponent` - This is a functional component that takes as a second
 argument an array of states, and as a third argument the dispatch function.
 
 - `(props, states, dispatch) => Element`
 
 `getState` - This is a getter function that takes the state and returns an array
-of states. The resulting array is used to memoize the component.
+of states. The resulting array is used to memoize the component, and therefore
+must have a static length.
 
 - `state => any[]`
