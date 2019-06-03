@@ -6,9 +6,9 @@
   "types": "lib/index.d.ts",
   "module": "lib/index.es.js",
   "scripts": {
-    "build": "mkdir lib && npm run build-commonjs && npm run build-es && tsc --declaration",
-    "build-commonjs": "babel src/index.tsx -o lib/index.js --extensions '.tsx' --presets=@babel/preset-env",
-    "build-es": "babel src/index.tsx -o lib/index.es.js --extensions '.tsx'",
+    "build": "mkdirp lib && npm run build-commonjs && npm run build-es && tsc --declaration",
+    "build-commonjs": "babel src/index.tsx --extensions '.tsx' --presets=@babel/preset-env > lib/index.js",
+    "build-es": "babel src/index.tsx --extensions '.tsx' > lib/index.es.js",
     "test": "jest",
     "commit": "git-cz",
     "version": "standard-version"
@@ -49,6 +49,7 @@
     "eslint-plugin-react": "^7.13.0",
     "husky": "^2.3.0",
     "jest": "^24.8.0",
+    "mkdirp": "^0.5.1",
     "prettier": "^1.17.1",
     "pretty-quick": "^1.11.0",
     "react": "^16.8.6",

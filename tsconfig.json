@@ -16,5 +16,6 @@
     "declarationDir": "./lib",
     "emitDeclarationOnly": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["*.spec.tsx"]
 }

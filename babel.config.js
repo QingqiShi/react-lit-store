@@ -7,6 +7,8 @@ module.exports = api => {
   return {
     presets,
     comments: false,
-    sourceMaps: true
+    sourceMaps: true,
+    include: ["./src"],
+    exclude: ["*.spec.tsx"]
   };
 };
