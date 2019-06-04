@@ -6,3 +6,4 @@ lib/index.spec.d.ts
 babel.config.js
 jest.config.js
 tsconfig.json
+.git
