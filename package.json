@@ -1,6 +1,6 @@
 {
   "name": "react-lit-store",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "⚡️ A lightweight state management tool for React.js",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
