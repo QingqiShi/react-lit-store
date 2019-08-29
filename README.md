@@ -13,16 +13,23 @@ Status](https://travis-ci.org/QingqiShi/react-lit-store.svg?branch=master)](http
 
 ## Motivation
 
-Now that React.js has Context API and hooks, many may find Redux less nessesary.
-However, running your own simple context store requires a little bit of
-boilerplate code, and if you want to keep all your states in a single context, you may find it a bit tricky to optimise unnessesary renders.
+The most popular state management solution for React today is Redux. There are two
+issues with using it:
+
+1. Using Redux will increase your bundle size by 2.6kb
+   (redux) + 5.5kb (react-redux) = 8.1kb after gzip. (source
+   [here](https://bundlephobia.com/result?p=redux@4.0.4]) and
+   [here](https://bundlephobia.com/result?p=react-redux@7.1.1))
+2. Many things rely on contractual agreement, which means that you can't catch
+   type errors and you won't get IDE suggestions. For example it is the
+   developer's responsibility to ensure the same type and payload is dispatched
+   in the actions as accepted in the reducers.
 
 ## Solution
 
-This library tries to solve that by providing a familiar way to create context
-stores and connect them to components. The implementation uses the Context API
-and hooks to make it super light weight. You don't actually have to use this
-library, feel free to take it and modify for your own needs.
+This library tries to solve that by leveraging the Context API and Hooks from
+the latest React. With react-lit-store, you get strong type check as well as
+great IDE suggestions. At the same time, our target bundle size is less than 1.5kb.
 
 ## Installation
 
@@ -30,135 +37,132 @@ library, feel free to take it and modify for your own needs.
 > npm i react-lit-store
 ```
 
-## Simple Example
+## Example (Typescript)
 
-Create a state store
+To create a store, all you need to do is provide an initial state and a
+mutations object:
 
-```js
-// store/counter.js
-import { createStore } from "react-lit-store";
+```ts
+/* counterStore.ts */
+import { createStore } from "libs/lit-store";
 
-const initialState = {
-  count: 0
+const initialState = { count: 3 };
+type State = typeof initialState;
+
+const mutations = {
+  add: (prevState: State, amount: number) => ({
+    count: prevState.count + amount
+  })
 };
 
-const reducer = (prevState, action) {
-  const { type, payload } = action;
-  switch(type) {
-    case "increase":
-      return { count: prevState.count + 1 };
-    case "decrease":
-      return { count: prevState.count - 1 };
-    case "set":
-      return { count: payload };
-  }
-}
-
-export default createStore(initialState, reducer);
+const store = createStore(initialState, mutations);
+export default store;
 ```
 
-Make the store available in your application
+The mutations object is just a map between mutation names and
+update functions. Every mutation receives the previous state as the first
+argument, and the rest of the arguments are up to you. The update functions
+should return objects which will be merged with the state.
 
-```js
-// App.js
+To use the store, you need to first wrap the app in the store provider:
+
+```tsx
+/* App.tsx */
 import React from "react";
-import counter from "store/counter";
+import CounterButton from "./CounterButton.tsx";
+import counterStore from "./counterStore.ts";
 
 function App() {
   return (
-    <counter.Provider>
-      <div className="App">{/* ... */}</div>
-    </counter.Provider>
+    <counterStore.Provider>
+      <CounterButton />
+    </counterStore.Provider>
   );
 }
 
 export default App;
 ```
 
-You can also have multiple stores
+You can then use the store in any of your components:
 
-```js
-// App.js
+```tsx
+/* CounterButton.tsx */
 import React from "react";
-import { withStores } from "react-lit-store";
-import counter from "store/counter";
-import otherStore from "store/otherStore";
+import counterStore from "./counterStore.ts";
 
-function App() {
-  return <div className="App">{/* ... */}</div>;
-}
-
-export default withStores(App, counter, otherStore);
-```
-
-Access the store from your components
-
-```js
-// components/MyButton.js
-import React from "react";
-import counter from "store/counter";
-
-function MyButton(props, states, dispatch) {
-  const [count] = states;
-
-  const handlePlusClick = () => dispatch({ type: "increase" });
-  const handleMinusClick = () => dispatch({ type: "increase" });
-  const handleSetClick = () => dispatch({ type: "increase", payload: 5 });
+function CounterButton() {
+  const [state, actions] = counterStore.useStore();
+  const handleClick = () => {
+    actions.add(5);
+  };
 
   return (
-    <>
-      <button onClick={handlePlusClick}>+</button>
-      <button onClick={handleMinusClick}>-</button>
-      <button onClick={handleSetClick}>Set</button>
-      {count}
-    </>
+    <button type="button" onClick={handleClick}>
+      {state.count}
+    </button>
   );
 }
-
-export default counter.connect(App, state => [state.count]);
 ```
 
-## API Reference
+Actions are just named functions that, when called, fires the mutations defined
+using the arguments provided. Both `state` and `actions` will get full IDE integration will suggestions
+and
+type checking.
 
-### `createStore(initialState, reducer)`
+If your application requires many global state, we recommend splitting your
+states into seperate stores, and only import them in your components as needed.
+This will help minimise unnessesary rerenders.
 
-Returns the store object.
+A utility function `useStoreProvider` can be used to help you avoid the ugly nesting of store
+providers when you have many stores.
 
-`initialState` - An object used as the initial state. It is recommended to
-initialise all states in your store here.
+```tsx
+/* App.tsx */
+import React from "react";
+import storeA from "./storeA";
+import storeB from "./storeB";
+/* ... */
+import { useStoreProvider } from "libs/lit-store";
 
-`reducer` - A function that takes the previous State and the action object, and
-returns a partial state used to update the context.
+function App() {
+  const StoreProvider = useStoreProvider(storeA, storeB /* ... */);
 
-- `(prevState, action) => partialState`
-  - `prevState` is just the current state before the dispatch was fired
-  - `action` is an object with a `type` and `payload` parameters. This is not
-    enforced - as long as it matches your reducer then it should work. However,
-    it is suggested to keep to this structure for consistency and best editor
-    suggestions when dispatching actions.
-  - Reducer doesn't need to return the full state, you can return a partial
-    state which then get merged with the rest of the state.
+  return <StoreProvider>{/* ... */}</StoreProvider>;
+}
 
-### `withStore(RootComponent, ...stores)`
+export default App;
+```
 
-Returns the root component wrapped with context providers from your stores.
+## JavaScript Example
 
-`RootComponent` - The root component that the stores will be available to.
+You don't have to use typescript (but then of course you won't get all the
+typechecking and IDE suggestions). Here's an example of a store created with
+pure JavaScript.
 
-`stores` - The rest of the arguments are the stores that you want to make
-available, useful when you want to modularise your store.
+```js
+/* counterStore.ts */
+import { createStore } from "libs/lit-store";
 
-### `Store.connect(EnhancedComponent, getState)`
+const initialState = { count: 3 };
+const mutations = {
+  add: (prevState, amount) => ({
+    count: prevState.count + amount
+  })
+};
 
-Returns a connected component.
+const store = createStore(initialState, mutations);
+export default store;
+```
 
-`EnhancedComponent` - This is a functional component that takes as a second
-argument an array of states, and as a third argument the dispatch function.
+## Compatibility
 
-- `(props, states, dispatch) => Element`
+`react-lit-store` is compile to ES5, and requires React 16.8 or higher as a peer
+dependency.
 
-`getState` - This is a getter function that takes the state and returns an array
-of states. The resulting array is used to memoize the component, and therefore
-must have a static length.
+If you don't need to support older browsers, you can also import the following
+for even smaller bundle size (however for maximum compatibility we recommend the
+standard import):
 
-- `state => any[]`
+```ts
+import { createStore, useStoreProvider } from "react-lit-store/index.es";
+```

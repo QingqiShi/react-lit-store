@@ -1,86 +1,96 @@
 import React, { createContext, useContext, useReducer, useMemo } from "react";
 
-type StoreContext<S> = React.Context<[S, React.Dispatch<Action>]>;
+type Mutations<S> = {
+  [name: string]: (state: S, ...args: any) => Partial<S>;
+};
 
-type PartialReducer<S> = (
-  prevState: S,
-  action: Action
-) => Partial<S> | undefined;
+type Payload<M> = M extends (state: any, ...args: infer P) => any ? P : never;
 
-type Connect<S, T = any[]> = (
-  Component: (
-    props: any,
-    states: T,
-    dispatch: React.Dispatch<Action>
-  ) => React.ReactElement,
-  getStates: (state: S) => T
-) => (props: any) => React.ReactElement;
+type Actions<M> = { [name in keyof M]: (...args: Payload<M[name]>) => void };
 
-export interface Action {
-  type: string;
-  payload?: any;
-}
+type StoreContext<S, A> = React.Context<[S, A]>;
 
-export interface Store<S> {
-  Provider: (props: { children: React.ReactElement }) => React.ReactElement;
-  connect: Connect<S>;
-}
+export type Store<S, M> = {
+  Provider: React.FC<React.PropsWithChildren<{}>>;
+  useStore: () => [Readonly<S>, Actions<M>];
+};
 
-/**
- * Creates the a store.
- */
-export function createStore<S>(
-  initialState: S,
-  reducer: PartialReducer<S>
-): Store<S> {
-  const context: StoreContext<S> = createContext([initialState, _ => {}]);
-
-  const enhancedReducer = (prevState: S, action: Action) => ({
-    ...prevState,
-    ...reducer(prevState, action)
+function getEmptyActions<S, M extends Mutations<S>>(mutations: M) {
+  const actions: Actions<M> = Object.assign({}, mutations);
+  Object.keys(mutations).forEach((name: keyof M) => {
+    actions[name] = () => {};
   });
-
-  const Provider = ({ children }: { children: JSX.Element }) => {
-    const store = useReducer<React.Reducer<S, Action>>(
-      enhancedReducer,
-      initialState
-    );
-    return <context.Provider value={store}>{children}</context.Provider>;
-  };
-
-  const connect = <T extends any[]>(
-    Component: (
-      props: any,
-      states: T,
-      dispatch: React.Dispatch<Action>
-    ) => React.ReactElement,
-    getStates: (state: S) => T
-  ) => (props: any) => {
-    const [state, dispatch] = useContext(context);
-    const deps = getStates(state);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    return useMemo(() => Component(props, deps, dispatch), [...deps, props]);
-  };
-
-  return { Provider, connect };
+  return actions;
 }
 
 /**
- * Helper function that combines multiple stores and wrapps the provided
- * component with the providers of each store.
+ * Create a lit-store instance with the initial state and reducer.
+ * @param initialState Initial store state
+ * @param reducer Reducer to mutate state
+ * @returns Store instance with `Provider` component and `useStore` hook.
  */
-export function withStores(
-  Component: (props: any) => React.ReactElement,
-  ...stores: Store<any>[]
-) {
-  return (props: any) => {
-    let wrapped = <Component {...props} />;
+export function createStore<S, M extends Mutations<S>>(
+  initialState: S,
+  mutations: M
+): Store<S, M> {
+  const context: StoreContext<S, Actions<M>> = createContext([
+    initialState,
+    getEmptyActions<S, M>(mutations)
+  ]);
 
-    stores.forEach(store => {
-      wrapped = <store.Provider>{wrapped}</store.Provider>;
+  function reducer(
+    prevState: S,
+    action: {
+      type: keyof M;
+      payload: Payload<M[keyof M]>;
+    }
+  ): S {
+    return {
+      ...prevState,
+      ...mutations[action.type](prevState, ...action.payload)
+    };
+  }
+
+  function Provider({ children }: React.PropsWithChildren<{}>) {
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    const actions: Actions<M> = useMemo(() => {
+      const result: Actions<M> = Object.assign({}, mutations);
+      Object.keys(mutations).forEach((name: keyof M) => {
+        result[name] = (...args) => {
+          dispatch({ type: name, payload: args });
+        };
+      });
+      return result;
+    }, [dispatch]);
+
+    return (
+      <context.Provider value={[state, actions]}>{children}</context.Provider>
+    );
+  }
+
+  function useStore() {
+    return useContext(context);
+  }
+
+  return { Provider, useStore };
+}
+
+/**
+ * A custom hook to combine multiple stores and returns a single Provider.
+ * @param stores List of stores
+ * @returns A single Provider component that provides all the stores
+ */
+export function useStoreProvider(
+  ...stores: Store<any, any>[]
+): React.FC<React.PropsWithChildren<{}>> {
+  function Provider({ children }: React.PropsWithChildren<{}>) {
+    let wrapped = children;
+    stores.forEach(({ Provider }) => {
+      wrapped = <Provider>{wrapped}</Provider>;
     });
+    return <>{wrapped}</>;
+  }
 
-    return wrapped;
-  };
+  return Provider;
 }
