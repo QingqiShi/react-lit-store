@@ -11,7 +11,7 @@
     "build-es": "babel src/index.tsx --extensions '.tsx' > lib/index.es.js",
     "test": "jest",
     "commit": "git-cz",
-    "version": "standard-version"
+    "version": "standard-version --preset angular"
   },
   "author": "Qingqi Shi <qingqishi@live.com> (https://qingqi.dev)",
   "repository": {
