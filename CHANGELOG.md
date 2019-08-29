@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [1.0.0](https://github.com/QingqiShi/react-lit-store/compare/v0.1.3...v1.0.0) (2019-08-29)
+
+### Features
+
+- replace reducers with mutations for better type-checks ([ff71f71](https://github.com/QingqiShi/react-lit-store/commit/ff71f71))
+
+### BREAKING CHANGES
+
+- Reducers are no longer used, please read the README docs on how to use mutations.
+
 ### [0.1.3](https://github.com/QingqiShi/react-lit-store/compare/v0.1.2...v0.1.3) (2019-06-04)
 
 ### Bug Fixes
