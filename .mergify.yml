@@ -1,0 +1,9 @@
+pull_request_rules:
+  - name: automatic merge on dependency bump and ci success
+    conditions:
+      - author=dependabot-preview[bot]
+      - status-success=continuous-integration/travis-ci/pr
+      - base=develop
+    actions:
+      merge:
+        method: merge
