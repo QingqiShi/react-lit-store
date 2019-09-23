@@ -1,14 +1,18 @@
 import React, { createContext, useContext, useReducer, useMemo } from "react";
 
-type Mutations<S> = {
+export type Mutations<S> = {
   [name: string]: (state: S, ...args: any) => Partial<S>;
 };
 
-type Payload<M> = M extends (state: any, ...args: infer P) => any ? P : never;
+export type Payload<M> = M extends (state: any, ...args: infer P) => any
+  ? P
+  : never;
 
-type Actions<M> = { [name in keyof M]: (...args: Payload<M[name]>) => void };
+export type Actions<M> = {
+  [name in keyof M]: (...args: Payload<M[name]>) => void;
+};
 
-type StoreContext<S, A> = React.Context<[S, A]>;
+export type StoreContext<S, A> = React.Context<[S, A]>;
 
 export type Store<S, M> = {
   Provider: React.FC<React.PropsWithChildren<{}>>;
