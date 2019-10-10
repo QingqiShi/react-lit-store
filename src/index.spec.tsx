@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
 import { render, fireEvent } from "@testing-library/react";
-import { createStore, useStoreProvider, Store } from "./index";
+import { createStore, useStoreProvider } from "./index";
 import "@testing-library/jest-dom/extend-expect";
 
-function renderWithStore(ui: React.ReactNode, store: Store<any, any>) {
+function renderWithStore(
+  ui: React.ReactNode,
+  store: import("./index").Store<any, any>
+) {
   return render(<store.Provider>{ui}</store.Provider>);
 }
 
