@@ -4,18 +4,16 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "jsx": "preserve",
-    "baseUrl": "src",
+    "jsx": "react",
+    "baseUrl": "./src",
     "declaration": true,
     "declarationDir": "./lib",
-    "emitDeclarationOnly": true
+    "outDir": "./lib"
   },
   "include": ["src"],
-  "exclude": ["*.spec.tsx"]
+  "exclude": ["src/*.spec.tsx"]
 }

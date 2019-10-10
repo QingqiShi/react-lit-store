@@ -5,9 +5,10 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "mkdirp lib && npm run build-commonjs && npm run build-es && tsc --declaration",
-    "build-commonjs": "babel src/index.tsx --extensions '.tsx' --presets=@babel/preset-env > lib/index.js",
-    "build-es": "babel src/index.tsx --extensions '.tsx' > lib/index.es.js",
+    "build": "mkdirp lib && npm run build-commonjs && npm run build-es && npm run minify",
+    "build-commonjs": "tsc",
+    "build-es": "mv src/index.tsx src/index.es.tsx && tsc --module esnext && mv src/index.es.tsx src/index.tsx",
+    "minify": "terser lib/index.js --output lib/index.js && terser lib/index.es.js --output lib/index.es.js",
     "test": "jest",
     "commit": "git-cz",
     "version": "standard-version --preset angular"
@@ -29,18 +30,12 @@
     "react": "^16.8.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.5.5",
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.3.3",
     "@testing-library/jest-dom": "^4.1.0",
     "@testing-library/react": "^9.1.4",
     "@types/jest": "^24.0.18",
     "@types/react": "^16.9.2",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
-    "babel-preset-minify": "^0.5.1",
     "codecov": "^3.5.0",
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^3.0.2",
@@ -55,6 +50,8 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "standard-version": "^7.0.0",
+    "terser": "^4.3.8",
+    "ts-jest": "^24.1.0",
     "typescript": "^3.6.2"
   },
   "husky": {

@@ -51,7 +51,7 @@ export function createStore<S, M extends Mutations<S>>(
   ): S {
     return {
       ...prevState,
-      ...mutations[action.type](prevState, ...action.payload)
+      ...mutations[action.type](prevState, ...(action.payload as any[]))
     };
   }
 
