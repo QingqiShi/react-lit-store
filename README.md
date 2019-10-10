@@ -18,7 +18,7 @@ issues with using it:
 
 1. Using Redux will increase your bundle size by 2.6kb
    (redux) + 5.5kb (react-redux) = 8.1kb after gzip. (source
-   [here](https://bundlephobia.com/result?p=redux@4.0.4]) and
+   [here](https://bundlephobia.com/result?p=redux@4.0.4) and
    [here](https://bundlephobia.com/result?p=react-redux@7.1.1))
 2. Many things rely on contractual agreement, which means that you can't catch
    type errors and you won't get IDE suggestions. For example it is the
