@@ -14,22 +14,14 @@ Status](https://travis-ci.org/QingqiShi/react-lit-store.svg?branch=master)](http
 ## Motivation
 
 The most popular state management solution for React today is Redux. There are two
-issues with using it:
+problems with it:
 
-1. Using Redux will increase your bundle size by 2.6kb
-   (redux) + 5.5kb (react-redux) = 8.1kb after gzip. (source
-   [here](https://bundlephobia.com/result?p=redux@4.0.4) and
-   [here](https://bundlephobia.com/result?p=react-redux@7.1.1))
-2. Many things rely on contractual agreement, which means that you can't catch
-   type errors and you won't get IDE suggestions. For example it is the
-   developer's responsibility to ensure the same type and payload is dispatched
-   in the actions as accepted in the reducers.
+1. **Bundle size.** Using Redux will increase your bundle size by 2.6kb (redux) + 5.5kb (react-redux) = _8.1kb after gzip_. (source [here](https://bundlephobia.com/result?p=redux@4.0.4) and [here](https://bundlephobia.com/result?p=react-redux@7.1.1))
+2. **Type checking.** Type checking redux is _hard_. You often need to rely on implicit agreement between the actions and the reducers, and requires explicit type definitions. (source [here](https://redux.js.org/recipes/usage-with-typescript#type-checking-reducers))
 
-## Solution
+## Solution: ⚡️ react-lit-store
 
-This library tries to solve that by leveraging the Context API and Hooks from
-the latest React. With react-lit-store, you get strong type check as well as
-great IDE suggestions. At the same time, our target bundle size is less than 1.5kb.
+This library leverages the Context API and React Hooks to achieve less than 1kb bundle size and fantastic type checking experience.
 
 ## Installation
 
@@ -39,12 +31,12 @@ great IDE suggestions. At the same time, our target bundle size is less than 1.5
 
 ## Example (Typescript)
 
-To create a store, all you need to do is provide an initial state and a
+🛠 **Create stores.** To create a store, all you need to do is provide an initial state and a
 mutations object:
 
 ```ts
 /* counterStore.ts */
-import { createStore } from "libs/lit-store";
+import { createStore } from "react-lit-store";
 
 const initialState = { count: 3 };
 type State = typeof initialState;
@@ -59,12 +51,9 @@ const store = createStore(initialState, mutations);
 export default store;
 ```
 
-The mutations object is just a map between mutation names and
-update functions. Every mutation receives the previous state as the first
-argument, and the rest of the arguments are up to you. The update functions
-should return objects which will be merged with the state.
+> The _mutations object_ is just a map between mutation names and update functions. Every mutation receives the previous state as the first argument, and the rest of the arguments are up to you. The update functions should return objects which will be merged with the state.
 
-To use the store, you need to first wrap the app in the store provider:
+🎁 **Wrap providers.** To use the store, you need to first wrap the app with the store provider:
 
 ```tsx
 /* App.tsx */
@@ -83,7 +72,9 @@ function App() {
 export default App;
 ```
 
-You can then use the store in any of your components:
+> You can also use the `useStoreProvider` utility to make this even simpler, see below.
+
+⚡️ **Use state store!** You can then use the store in any of your components with the `useStore` hook.
 
 ```tsx
 /* CounterButton.tsx */
@@ -104,14 +95,9 @@ function CounterButton() {
 }
 ```
 
-Actions are just named functions that, when called, fires the mutations defined
-using the arguments provided. Both `state` and `actions` will get full IDE integration will suggestions
-and
-type checking.
+> Actions are just named functions that, when called, fires the defined mutations using the arguments provided. Both `state` and `actions` will get full IDE integration with suggestions and type checking.
 
-If your application requires many global state, we recommend splitting your
-states into seperate stores, and only import them in your components as needed.
-This will help minimise unnessesary rerenders.
+**Tip:** If your application requires many global state, we recommend splitting your states into seperate stores, and only import them in your components as needed. This will help minimise unnessesary rerenders.
 
 A utility function `useStoreProvider` can be used to help you avoid the ugly nesting of store
 providers when you have many stores.
@@ -122,7 +108,7 @@ import React from "react";
 import storeA from "./storeA";
 import storeB from "./storeB";
 /* ... */
-import { useStoreProvider } from "libs/lit-store";
+import { useStoreProvider } from "react-lit-store";
 
 function App() {
   const StoreProvider = useStoreProvider(storeA, storeB /* ... */);
