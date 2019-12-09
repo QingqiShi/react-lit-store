@@ -2,7 +2,7 @@ pull_request_rules:
   - name: automatic merge on dependency bump and ci success
     conditions:
       - author=dependabot-preview[bot]
-      - status-success=continuous-integration/travis-ci/pr
+      - status-success=Travis CI - Pull Request
       - base=develop
     actions:
       merge:
